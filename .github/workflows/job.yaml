@@ -36,8 +36,8 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           title: "Daily Contribution"
-          commit-message: "Daily contribution"
-          branch: daily-contribution
+          commit-message: "Daily Contributions"
+          branch: Daily-Contributions
           base: main
           body: "This pull request was created automatically by a GitHub Actions workflow to make a daily contribution."
           token: ${{ secrets.GITHUB_TOKEN }}
