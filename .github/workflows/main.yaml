@@ -22,24 +22,3 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GIT_EMAIL: trust.ayeniolamilekan@gmail.com  # Replace with your email address
-
-  backfill-commits:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write  # This grants write access to commit changes
-    if: github.event_name == 'push'  # Only run this job when there's a push event
-
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Backfill Commits
-      uses: bcanseco/github-contribution-graph-action@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GIT_EMAIL: trust.ayeniolamilekan@gmail.com  # Replace with your email address
-        MAX_DAYS: 365  # Backfill commits for 365 days (1 year)
-        MIN_COMMITS_PER_DAY: 1  # Minimum number of commits per day
-        MAX_COMMITS_PER_DAY: 5  # Maximum number of commits per day
-        INCLUDE_WEEKDAYS: true  # Include weekdays in the commit schedule
-        INCLUDE_WEEKENDS: true  # Include weekends in the commit schedule
