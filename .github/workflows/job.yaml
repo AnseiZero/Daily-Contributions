@@ -2,8 +2,7 @@ name: Daily Contributions
 
 on:
   schedule:
-    # Run once every day at midnight (UTC) to reduce over-activity
-    - cron: '0 0 * * *'  # This ensures the workflow runs only once a day
+    - cron: '0 0 * * *'  # Runs daily at midnight (UTC)
 
 jobs:
   make-contribution:
@@ -17,8 +16,7 @@ jobs:
 
       - name: Make daily contribution
         run: |
-          echo "Making daily contribution"
-          echo "$(date)" >> README.md
+          echo "Hi there! $(date)" >> README.md
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v7
@@ -31,23 +29,5 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          branch: daily-contribution
+          branch: main  # Push directly to the default branch
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          title: "Daily Contribution"
-          commit-message: "Daily Contributions"
-          branch: Daily-Contribution  # Use the branch with the daily changes
-          base: main  # Ensure it's merging into the default branch (main)
-          body: "This pull request was created automatically by a GitHub Actions workflow to make a daily contribution."
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Merge pull request
-        if: github.event.pull_request.state == 'open'  # Only merge if the PR is still open
-        run: |
-          curl -X PUT \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d '{"commit_message":"Merge daily contribution","merge_method":"merge"}' \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
