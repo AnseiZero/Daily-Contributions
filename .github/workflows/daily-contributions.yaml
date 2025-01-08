@@ -29,6 +29,10 @@ jobs:
           branch: daily-contribution  # Push to a separate branch
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Discard local changes (if any)
+        run: |
+          git checkout -- README.md  # Reset changes to README.md to avoid merge conflicts
+
       - name: Create pull request
         uses: peter-evans/create-pull-request@v3
         with:
