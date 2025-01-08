@@ -2,7 +2,7 @@ name: Daily Contributions
 
 on:
   schedule:
-    - cron: '0 */2 * * *'  # Runs daily at midnight (UTC)
+    - cron: '0 */2 * * *'  # Runs every 2 hours
 
 jobs:
   make-contribution:
@@ -59,3 +59,4 @@ jobs:
           else
             echo "No open pull requests to merge."
           fi
+
