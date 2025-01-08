@@ -2,7 +2,7 @@ name: Daily Contributions
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight (UTC)
+    - cron: '0 */2 * * *'  # Runs daily at midnight (UTC)
 
 jobs:
   make-contribution:
@@ -29,5 +29,33 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          branch: main  # Push directly to the default branch
+          branch: daily-contribution  # Push to a separate branch
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: "Daily Contribution"
+          commit-message: "Daily contribution"
+          branch: daily-contribution
+          base: main  # PR targets the default branch
+          body: "This pull request was created automatically by a GitHub Actions workflow."
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge pull request
+        run: |
+          echo "Checking for open pull requests..."
+          curl -X GET \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls" | jq '.[] | select(.head.ref == "daily-contribution") | .number' > pr_number.txt
+
+          if [ -s pr_number.txt ]; then
+            PR_NUMBER=$(cat pr_number.txt)
+            echo "Merging PR #$PR_NUMBER..."
+            curl -X PUT \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -d '{"commit_title":"Merge daily contribution","merge_method":"merge"}' \
+              "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER/merge"
+          else
+            echo "No open pull requests to merge."
+          fi
