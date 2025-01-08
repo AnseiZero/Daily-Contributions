@@ -20,9 +20,8 @@ jobs:
 
       - name: Commit changes if there are any
         run: |
-          git status
           git add README.md
-          git commit -m "Daily contribution" || echo "No changes to commit"
+          git diff --cached --quiet || git commit -m "Daily contribution"  # Commit only if there are changes
 
       - name: Push changes
         uses: ad-m/github-push-action@master
