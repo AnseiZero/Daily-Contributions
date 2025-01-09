@@ -2,7 +2,7 @@ name: Daily Commit and Backfill Workflow
 
 on:
   schedule:
-    - cron: '0 */2 * * *'  # This schedules the job to run every day at noon (UTC)
+    - cron: '0 */1 * * *'  # This schedules the job to run every day at noon (UTC)
   push:
     branches:
       - main  # Trigger this workflow when pushing to the main branch
